@@ -8,6 +8,59 @@ from julia.Flatten import flatten, reconstruct
 from julia.Serialization import serialize, deserialize
 
 
+def add_const_var(mdict, const_var, new_var, xbar):
+    """Adds a constraint variable. 
+
+    Assumes that before adding, the system contains 
+
+        `const_var = <equation>`
+
+    and afterwards
+
+        `const_var = max(xbar, new_var)`,
+
+    with 
+
+        `new_var = <equation>`
+    """
+
+    vv = mdict['vars']
+    const_var = 'RB'
+    rix = list(vv).index('RB')
+    vv = np.hstack((vv, 'RN'))
+    dimy = len(vv)
+
+    AA = np.pad(mdict['AA'], ((0, 0), (0, 1)))
+    BB = np.pad(mdict['BB'], ((0, 0), (0, 1)))
+    CC = np.pad(mdict['CC'], ((0, 0), (0, 1)))
+    DD = mdict['DD']
+
+    BB[rix, [rix, -1]] = BB[rix, [-1, rix]]
+    CC[rix, [rix, -1]] = CC[rix, [-1, rix]]
+    fb0 = np.zeros(dimy)
+    fc0 = np.zeros(dimy)
+    fb0[rix] = 1
+    fb0[-1] = -1
+
+    # misc
+    mdict['vars'] = vv
+    mdict['const_var'] = const_var
+
+    # sys matrices w/o constraint equation
+    mdict['AA'] = AA
+    mdict['BB'] = BB
+    mdict['CC'] = CC
+    mdict['DD'] = DD
+
+    # constraint equation (MP rule)
+    mdict['fb'] = -fb0
+    mdict['fc'] = fc0
+
+    mdict['x_bar'] = -1  # lower bound (relative to st.st.)
+
+    return mdict
+
+
 def setfield(obj, field, val):
 
     japi.tmp_obj = obj
