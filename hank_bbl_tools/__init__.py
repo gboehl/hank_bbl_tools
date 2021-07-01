@@ -3,9 +3,6 @@
 
 import os
 import numpy as np
-from julia import Main as japi
-from julia.Flatten import flatten, reconstruct
-from julia.Serialization import serialize, deserialize
 
 
 def add_const_var(mdict, const_var, new_var, xbar):
@@ -59,19 +56,6 @@ def add_const_var(mdict, const_var, new_var, xbar):
     mdict['x_bar'] = -1  # lower bound (relative to st.st.)
 
     return mdict
-
-
-def setfield(obj, field, val):
-
-    japi.tmp_obj = obj
-    japi.eval("using Setfield")
-
-    if isinstance(val, int):
-        val = float(val)
-    japi.tmp_val = val
-    japi.eval("@set! tmp_obj.%s = tmp_val" % field)
-
-    return japi.tmp_obj
 
 
 def hank2dict(hank, stst, A, B, gx=None, hx=None, path=None):
