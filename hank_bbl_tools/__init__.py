@@ -61,29 +61,32 @@ def add_const_var(mdict, const_var, new_var, xbar):
 def hank2dict(hank, stst, A, B, gx=None, hx=None, path=None):
 
     var_list = []
-    for i in range(len(stst.indexes.distr_m)):
-        var_list.append('distr_m%s' % i)
 
-    for i in range(len(stst.indexes.distr_k)):
-        var_list.append('distr_k%s' % i)
+    if hasattr(stst, "indexes"):
+        for i in range(len(stst.indexes.distr_m)):
+            var_list.append('distr_m%s' % i)
 
-    for i in range(len(stst.indexes.distr_y)):
-        var_list.append('distr_y%s' % i)
+        for i in range(len(stst.indexes.distr_k)):
+            var_list.append('distr_k%s' % i)
 
-    for i in range(len(stst.indexes.D)):
-        var_list.append('distr_cop%s' % i)
+        for i in range(len(stst.indexes.distr_y)):
+            var_list.append('distr_y%s' % i)
+
+        for i in range(len(stst.indexes.D)):
+            var_list.append('distr_cop%s' % i)
 
     for i in hank.state_names_ascii:
         var_list.append(i)
 
-    for i in range(len(stst.indexes.Vm)):
-        var_list.append('Vm%s' % i)
+    if hasattr(stst, "indexes"):
+        for i in range(len(stst.indexes.Vm)):
+            var_list.append('Vm%s' % i)
 
-    for i in range(len(stst.indexes.Vk)):
-        var_list.append('Vk%s' % i)
+        for i in range(len(stst.indexes.Vk)):
+            var_list.append('Vk%s' % i)
 
-    for i in range(len(stst.indexes.V)):
-        var_list.append('V%s' % i)
+        for i in range(len(stst.indexes.V)):
+            var_list.append('V%s' % i)
 
     for i in hank.control_names_ascii:
         var_list.append(i)
